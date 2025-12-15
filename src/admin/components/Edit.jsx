@@ -1,274 +1,185 @@
-import { useEffect, useState, useRef } from "react";
-import React from "react";
-import Card_Slider from "./../../components/Card_Slider";
-import "./../admin.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-const Edit = () => {
-  const [categories, setCategories] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+// AdminPage.jsx
+import React, { useEffect, useState } from "react";
 
-  const [isDeleteCatOpen, setIsDeleteCatOpen] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
+const API_BASE = "https://snackalmond1.pythonanywhere.com";
 
-  const [editData, setEditData] = useState({
-    id: null,
-    name: "",
-    imageUrl: "",
-    price: "",
-  });
-
-  const widgetRef = useRef(null);
+const AdminPage = () => {
+  const [data, setData] = useState([]); // جميع الأصناف
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/categories")
-      .then(res => res.json())
-      .then(data => setCategories(data));
-  }, []);
-
-
-  useEffect(() => {
-    widgetRef.current = window.cloudinary.createUploadWidget(
-      {
-        cloudName: "import.meta.env.VITE_CLOUDINARY_CLOUD_NAME",
-        uploadPreset: "unsigned_products",
-        multiple: false,
-        folder: "products",
-      },
-      (error, result) => {
-        if (!error && result.event === "success") {
-          setEditData(prev => ({
-            ...prev,
-            imageUrl: result.info.secure_url,
-          }));
-          toast.success("تم رفع الصورة بنجاح");
-        }
-      }
-    );
-  }, []);
-
-  const openEditModal = (product) => {
-    setEditData({
-      id: product.id,
-      name: product.name,
-      imageUrl: product.imageUrl,
-      price: product.price,
-    });
-    setIsModalOpen(true);
-  };
-
-  const saveChanges = async () => {
-    try {
-      const res = await fetch(`/api/products/${editData.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editData),
+    fetch(`${API_BASE}/home/`)
+      .then((res) => res.json())
+      .then((json) => {
+        // جمع كل الأصناف من كل فئة في مصفوفة واحدة
+        const allMeals = json.flatMap(category => category.meals);
+        setData(allMeals);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
       });
+  }, []);
 
-      if (!res.ok) throw new Error("حصل خطأ أثناء حفظ التعديل");
-
-      setIsModalOpen(false);
-
-      fetch("/api/categories")
-        .then(res => res.json())
-        .then(data => {
-          setCategories(data);
-          toast.success("تم حفظ التعديلات بنجاح");
-        });
-    } catch (err) {
-      console.error(err);
-      toast.error("فشل حفظ التعديلات — حاول مرة ثانية");
-    }
-  };
-
-  const deleteProduct = async (id) => {
-    try {
-      const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("حصل خطأ أثناء حذف المنتج");
-
-      fetch("/api/categories")
-        .then(res => res.json())
-        .then(data => {
-          setCategories(data);
-          toast.success("تم حذف المنتج");
-        });
-    } catch (err) {
-      console.error(err);
-      toast.error("فشل حذف المنتج");
-    }
-  };
-
-  const openDeleteCategory = (category) => {
-    setCategoryToDelete(category);
-    setIsDeleteCatOpen(true);
-  };
-
-  const confirmDeleteCategory = async () => {
-    if (!categoryToDelete) return;
-    const id = categoryToDelete.id;
+  const deleteMeal = async (mealId) => {
+    const previous = [...data];
+    setData(d => d.filter(m => m.id !== mealId));
 
     try {
-      await fetch(`/api/categories/${id}`, { method: "DELETE" });
-
-      setCategories(prev => prev.filter(c => c.id !== id));
-      setIsDeleteCatOpen(false);
-      setCategoryToDelete(null);
-      toast.success("تم حذف الفئة بنجاح");
+      const res = await fetch(`${API_BASE}/editmeal/${mealId}/`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
     } catch (err) {
       console.error(err);
-      toast.error("ما قدرنا نحذف الكاتيجوري. جرّب لاحقاً.");
+      setData(previous);
+      alert("فشل الحذف، حاول مرة أخرى");
     }
   };
+
+  const updateMealPrice = async (mealId, newPrice) => {
+    const previous = [...data];
+    setData(d => d.map(m => m.id === mealId ? { ...m, price: newPrice } : m));
+
+    try {
+      const res = await fetch(`${API_BASE}/editmeal/${mealId}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ price: newPrice }),
+      });
+      if (!res.ok) throw new Error("Update failed");
+    } catch (err) {
+      console.error(err);
+      setData(previous);
+      alert("فشل تحديث السعر، حاول مرة أخرى");
+    }
+  };
+
+  if (loading) return <div>جاري التحميل...</div>;
 
   return (
-    <div className="Edit">
-
-      {categories.map(category => (
-        <div key={category.id} className="category-block">
-          <div className="category-header">
-
-            <div className="category-actions">
-              <button
-                className="cat-delete-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openDeleteCategory(category);
-                }}
-                title="حذف الكاتيجوري"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6M10 11v6M14 11v6M9 6l1-3h4l1 3"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <h1 className="category-title">{category.name}</h1>
-          </div>
-
-          <div className="Grid_items">
-            {category.products.map(product => (
-              <div key={product.id} className="admin-card-container">
-
-                <Card_Slider
-                  Img={product.imageUrl}
-                  Text={product.name}
-                  Price={product.price}
-                />
-
-                <div className="admin-overlay">
-                  <button className="edit-btn" onClick={() => openEditModal(product)}>
-                    تعديل
-                  </button>
-                  <button className="del-btn" onClick={() => deleteProduct(product.id)}>
-                    حذف
-                  </button>
-                </div>
-
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-
-      {isModalOpen && (
-        <div className="modal-back">
-          <div className="modal-box">
-            <h2>تعديل المنتج</h2>
-
-            <label>اسم المنتج:</label>
-            <input
-              type="text"
-              value={editData.name}
-              onChange={(e) =>
-                setEditData({ ...editData, name: e.target.value })
-              }
-            />
-
-            <label>الصورة:</label>
-            <button
-              type="button"
-              className="upload-btn"
-              onClick={() => widgetRef.current.open()}
-            >
-              رفع صورة جديدة
-            </button>
-
-            {editData.imageUrl && (
-              <img
-                src={editData.imageUrl}
-                alt="preview"
-                className="w-24 mt-2 rounded"
-              />
-            )}
-
-            <label>السعر:</label>
-            <input
-              type="number"
-              value={editData.price}
-              onChange={(e) =>
-                setEditData({ ...editData, price: e.target.value })
-              }
-            />
-
-            <div className="modal-actions">
-              <button className="save-btn" onClick={saveChanges}>
-                حفظ
-              </button>
-              <button className="cancel-btn" onClick={() => setIsModalOpen(false)}>
-                إلغاء
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {isDeleteCatOpen && categoryToDelete && (
-        <div className="modal-back">
-          <div className="confirm-box">
-            <div className="confirm-icon">⚠️</div>
-            <h3>تأكيد حذف الفئة</h3>
-
-            <p className="confirm-text">
-              هل تريد حذف الفئة <strong>{categoryToDelete.name}</strong>؟
-              {categoryToDelete.products?.length > 0 && (
-                <>
-                  <br />
-                  تحتوي على <strong>{categoryToDelete.products.length}</strong> منتج
-                </>
-              )}
-            </p>
-
-            <div className="confirm-actions">
-              <button
-                className="confirm-btn cancel"
-                onClick={() => {
-                  setIsDeleteCatOpen(false);
-                  setCategoryToDelete(null);
-                }}
-              >
-                إلغاء
-              </button>
-
-              <button
-                className="confirm-btn danger"
-                onClick={confirmDeleteCategory}
-              >
-                حذف نهائي
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <ToastContainer position="top-center" autoClose={3000} />
+    <div style={{ padding: 20 }}>
+      <h1>صفحة الأدمن</h1>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+        {data.map(meal => (
+          <AdminCard
+            key={meal.id}
+            meal={meal}
+            onDelete={deleteMeal}
+            onUpdatePrice={updateMealPrice}
+          />
+        ))}
+      </div>
     </div>
   );
 };
 
-export default Edit;
+const AdminCard = ({ meal, onDelete, onUpdatePrice }) => {
+  const [hover, setHover] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editPrice, setEditPrice] = useState(meal.price);
+
+  const formatPrice = p => `ل.س ${p}`;
+
+  const handleSave = () => {
+    const parsed = parseFloat(editPrice);
+    if (isNaN(parsed) || parsed < 0) {
+      alert("أدخل سعر صالح");
+      return;
+    }
+    setEditing(false);
+    onUpdatePrice(meal.id, parsed);
+  };
+
+  const handleDelete = () => {
+    if (!window.confirm("هل تريد حذف هذا المنتج؟")) return;
+    onDelete(meal.id);
+  };
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: 220,
+        borderRadius: 10,
+        overflow: "hidden",
+        boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+        background: "#fff",
+        direction: "rtl",
+        cursor: "pointer",
+      }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => { setHover(false); setEditing(false); setEditPrice(meal.price); }}
+    >
+      <div style={{ height: 150, background: "#f5f5f5" }}>
+        <img
+          src={meal.image_url}
+          alt={meal.name}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </div>
+      <div style={{ padding: 12 }}>
+        <h3 style={{ margin: 0, fontSize: 16 }}>{meal.name}</h3>
+        <div style={{ fontSize: 13, opacity: 0.8 }}>{meal.englishName}</div>
+        {!editing ? (
+          <div style={{ marginTop: 8, fontWeight: "700" }}>{formatPrice(meal.price)}</div>
+        ) : (
+          <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center" }}>
+            <input
+              value={editPrice}
+              onChange={e => setEditPrice(e.target.value)}
+              inputMode="decimal"
+              style={{ padding: 6, width: 100 }}
+            />
+            <button onClick={handleSave} style={{ padding: "6px 8px" }}>حفظ</button>
+            <button onClick={() => { setEditing(false); setEditPrice(meal.price); }} style={{ padding: "6px 8px" }}>إلغاء</button>
+          </div>
+        )}
+      </div>
+
+      {hover && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            padding: 10,
+            background: "linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.08))",
+          }}
+        >
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={() => setEditing(true)}
+              style={{
+                padding: "8px 10px",
+                borderRadius: 8,
+                border: "none",
+                background: "#ffffffcc",
+                fontWeight: "600",
+                cursor: "pointer",
+              }}
+            >
+              تعديل السعر
+            </button>
+            <button
+              onClick={handleDelete}
+              style={{
+                padding: "8px 10px",
+                borderRadius: 8,
+                border: "none",
+                background: "#ffdddd",
+                fontWeight: "600",
+                cursor: "pointer",
+              }}
+            >
+              حذف
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminPage;

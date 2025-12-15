@@ -19,3 +19,4 @@ const Card_Slider = ({ Img, Title, Price, TitleEng }) => {
 };
 
 export default Card_Slider;
+

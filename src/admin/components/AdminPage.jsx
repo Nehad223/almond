@@ -14,7 +14,7 @@ export default function AdminPage() {
     englishName: "",
     price: "",
     category: "",
-    imageUrl: "",
+    image_url: "",
   });
 
   const widgetRef = useRef(null);
@@ -65,7 +65,7 @@ export default function AdminPage() {
         if (result.event === "success") {
           setProdForm((prev) => ({
             ...prev,
-            imageUrl: result.info.secure_url,
+            image_url: result.info.secure_url,
           }));
           toast.success("تم رفع الصورة بنجاح");
         }
@@ -110,9 +110,9 @@ export default function AdminPage() {
   const handleAddProduct = async (e) => {
     e.preventDefault();
 
-    const { name, englishName, price, category, imageUrl } = prodForm;
+    const { name, englishName, price, category, image_url } = prodForm;
 
-    if (!name || !englishName || !price || !category || !imageUrl) {
+    if (!name || !englishName || !price || !category || !image_url) {
       return toast.error("املأ جميع الحقول");
     }
 
@@ -133,7 +133,7 @@ export default function AdminPage() {
             englishName,
             price: Number(price),
             category: Number(category), // id الحقيقي
-            imageUrl,
+            image_url,
           }),
         }
     
@@ -150,7 +150,7 @@ export default function AdminPage() {
         englishName: "",
         price: "",
         category: "",
-        imageUrl: "",
+        image_url: "",
       });
 
       setIsProdModalOpen(false);
@@ -262,9 +262,9 @@ export default function AdminPage() {
                 رفع صورة الوجبة
               </button>
 
-              {prodForm.imageUrl && (
+              {prodForm.image_url && (
                 <img
-                  src={prodForm.imageUrl}
+                  src={prodForm.image_url}
                   alt="preview"
                   className="w-24 mt-2 rounded"
                 />
