@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import "./../admin.css";
+import Navbar from "../../components/Navbar";
+import Logo from "../../components/Logo";
+import EditPage from "./Edit";
 
 export default function AdminPage() {
   const [categories, setCategories] = useState([]);
@@ -166,6 +169,9 @@ export default function AdminPage() {
   // UI
   // =======================
   return (
+    <>
+ 
+
     <div className="min-h-screen flex flex-col items-end gap-4 bg-[#111] text-white p-6 admin container">
       <button className="admin-btn" onClick={() => setIsCatModalOpen(true)}>
         إضافة كاتيجوري
@@ -286,7 +292,10 @@ export default function AdminPage() {
             </form>
           </div>
         </div>
+
       )}
     </div>
+    <EditPage/>
+        </>
   );
 }

@@ -264,3 +264,142 @@ button::-moz-focus-inner { border: 0; }
   height: 90px !important;               
 }
 }
+/* تجعل أزرار الأدمن تظهر عند الهوفر */
+.Card_Slider.card { transition: transform .12s ease; }
+
+/* actions ستوضع في الزاوية وتظهر عند hover بواسطة القاعدة داخل Card_Slider */
+.actions button { font-size: 13px; }
+
+/* modal بسيط - يمكنك تخصيصه */
+.modal-overlay { backdrop-filter: blur(2px); }
+.actions {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.Card_Slider.card:hover .actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.Card_Slider.card {
+  position: relative;
+}
+.modal {
+  display: block !important;
+}
+/* ===== مودال تعديل السعر ===== */
+
+.price-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+.price-modal {
+  width: 340px;
+  background: linear-gradient(180deg, #1f1a17, #14110f);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(201, 162, 77, 0.25);
+  color: #e6ceb4;
+  direction: rtl;
+  animation: scaleIn 0.2s ease;
+}
+
+.price-modal-title {
+  margin: 0 0 18px;
+  font-size: 17px;
+  text-align: center;
+  color: #f3d98b;
+  letter-spacing: 0.5px;
+}
+
+/* input */
+.price-modal-field label {
+  font-size: 13px;
+  color: #c9a24d;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.price-modal-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 162, 77, 0.3);
+  background: #0f0d0c;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.price-modal-field input:focus {
+  border-color: #f3d98b;
+  box-shadow: 0 0 0 2px rgba(243, 217, 139, 0.2);
+}
+
+/* buttons */
+.price-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(201, 162, 77, 0.35);
+  color: #e6ceb4;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background: rgba(201, 162, 77, 0.1);
+}
+
+.btn-save {
+  flex: 1;
+  background: linear-gradient(135deg, #c9a24d, #f3d98b);
+  border: none;
+  color: #1a140f;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(243, 217, 139, 0.35);
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); }
+  to { transform: scale(1); }
+}

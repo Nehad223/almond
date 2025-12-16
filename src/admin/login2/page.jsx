@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './../admin.css';
-export default function AdminLogin() {
+export default function AdminLogin2() {
   const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

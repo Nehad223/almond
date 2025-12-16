@@ -1,19 +1,33 @@
-// AdminPage.jsx
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import Loader from "../../components/Loader";
+import Cards from "../../components/Cards";
+import Logo from "../../components/Logo";
 
-const API_BASE = "https://snackalmond1.pythonanywhere.com";
+const EditPage = () => {
+  const navigate = useNavigate();
 
-const AdminPage = () => {
-  const [data, setData] = useState([]); // جميع الأصناف
+  const [data, setData] = useState([]); 
+  const [activeCategory, setActiveCategory] = useState(0);
   const [loading, setLoading] = useState(true);
+  const adminToken = sessionStorage.getItem("token");
+  const isAdmin = Boolean(adminToken);
 
   useEffect(() => {
-    fetch(`${API_BASE}/home/`)
+    if (!adminToken) {
+      navigate("/"); 
+    }
+  }, [adminToken, navigate]);
+const getAuthHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${adminToken}`,
+});
+  useEffect(() => {
+    fetch("https://snackalmond1.pythonanywhere.com/home/")
       .then((res) => res.json())
       .then((json) => {
-        // جمع كل الأصناف من كل فئة في مصفوفة واحدة
-        const allMeals = json.flatMap(category => category.meals);
-        setData(allMeals);
+        setData(json);
         setLoading(false);
       })
       .catch((err) => {
@@ -23,11 +37,26 @@ const AdminPage = () => {
   }, []);
 
   const deleteMeal = async (mealId) => {
-    const previous = [...data];
-    setData(d => d.filter(m => m.id !== mealId));
+    if (!window.confirm("هل أنت متأكد من حذف هذه الوجبة؟")) return;
+
+    const previous = JSON.parse(JSON.stringify(data));
+
+    setData((prev) =>
+      prev.map((cat) => ({
+        ...cat,
+        meals: cat.meals.filter((m) => m.id !== mealId),
+      }))
+    );
 
     try {
-      const res = await fetch(`${API_BASE}/editmeal/${mealId}/`, { method: "DELETE" });
+      const res = await fetch(
+        `https://snackalmond1.pythonanywhere.com/editmeal/${mealId}/`,
+        {
+          method: "DELETE",
+          headers: getAuthHeaders(),
+        }
+      );
+
       if (!res.ok) throw new Error("Delete failed");
     } catch (err) {
       console.error(err);
@@ -36,16 +65,29 @@ const AdminPage = () => {
     }
   };
 
+
   const updateMealPrice = async (mealId, newPrice) => {
-    const previous = [...data];
-    setData(d => d.map(m => m.id === mealId ? { ...m, price: newPrice } : m));
+    const previous = JSON.parse(JSON.stringify(data));
+
+    setData((prev) =>
+      prev.map((cat) => ({
+        ...cat,
+        meals: cat.meals.map((m) =>
+          m.id === mealId ? { ...m, price: newPrice } : m
+        ),
+      }))
+    );
 
     try {
-      const res = await fetch(`${API_BASE}/editmeal/${mealId}/`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ price: newPrice }),
-      });
+      const res = await fetch(
+        `https://snackalmond1.pythonanywhere.com/editmeal/${mealId}/`,
+        {
+          method: "PATCH",
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ price: newPrice }),
+        }
+      );
+
       if (!res.ok) throw new Error("Update failed");
     } catch (err) {
       console.error(err);
@@ -54,132 +96,29 @@ const AdminPage = () => {
     }
   };
 
-  if (loading) return <div>جاري التحميل...</div>;
+  if (loading) return <Loader />;
+
+  const activeMeals =
+    data?.[activeCategory]?.meals ?? [];
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>صفحة الأدمن</h1>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
-        {data.map(meal => (
-          <AdminCard
-            key={meal.id}
-            meal={meal}
-            onDelete={deleteMeal}
-            onUpdatePrice={updateMealPrice}
-          />
-        ))}
-      </div>
+    <div>
+      <Logo />
+      <Navbar
+        categories={data}
+        active={activeCategory}
+        setActive={setActiveCategory}
+      />
+
+      <Cards
+        meals={activeMeals}
+        isAdmin={isAdmin}
+        onDelete={deleteMeal}
+        onUpdatePrice={updateMealPrice}
+      />
     </div>
   );
 };
 
-const AdminCard = ({ meal, onDelete, onUpdatePrice }) => {
-  const [hover, setHover] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [editPrice, setEditPrice] = useState(meal.price);
+export default EditPage;
 
-  const formatPrice = p => `ل.س ${p}`;
-
-  const handleSave = () => {
-    const parsed = parseFloat(editPrice);
-    if (isNaN(parsed) || parsed < 0) {
-      alert("أدخل سعر صالح");
-      return;
-    }
-    setEditing(false);
-    onUpdatePrice(meal.id, parsed);
-  };
-
-  const handleDelete = () => {
-    if (!window.confirm("هل تريد حذف هذا المنتج؟")) return;
-    onDelete(meal.id);
-  };
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        width: 220,
-        borderRadius: 10,
-        overflow: "hidden",
-        boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-        background: "#fff",
-        direction: "rtl",
-        cursor: "pointer",
-      }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => { setHover(false); setEditing(false); setEditPrice(meal.price); }}
-    >
-      <div style={{ height: 150, background: "#f5f5f5" }}>
-        <img
-          src={meal.image_url}
-          alt={meal.name}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-      </div>
-      <div style={{ padding: 12 }}>
-        <h3 style={{ margin: 0, fontSize: 16 }}>{meal.name}</h3>
-        <div style={{ fontSize: 13, opacity: 0.8 }}>{meal.englishName}</div>
-        {!editing ? (
-          <div style={{ marginTop: 8, fontWeight: "700" }}>{formatPrice(meal.price)}</div>
-        ) : (
-          <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center" }}>
-            <input
-              value={editPrice}
-              onChange={e => setEditPrice(e.target.value)}
-              inputMode="decimal"
-              style={{ padding: 6, width: 100 }}
-            />
-            <button onClick={handleSave} style={{ padding: "6px 8px" }}>حفظ</button>
-            <button onClick={() => { setEditing(false); setEditPrice(meal.price); }} style={{ padding: "6px 8px" }}>إلغاء</button>
-          </div>
-        )}
-      </div>
-
-      {hover && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
-            padding: 10,
-            background: "linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.08))",
-          }}
-        >
-          <div style={{ display: "flex", gap: 8 }}>
-            <button
-              onClick={() => setEditing(true)}
-              style={{
-                padding: "8px 10px",
-                borderRadius: 8,
-                border: "none",
-                background: "#ffffffcc",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
-            >
-              تعديل السعر
-            </button>
-            <button
-              onClick={handleDelete}
-              style={{
-                padding: "8px 10px",
-                borderRadius: 8,
-                border: "none",
-                background: "#ffdddd",
-                fontWeight: "600",
-                cursor: "pointer",
-              }}
-            >
-              حذف
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default AdminPage;
