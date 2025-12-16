@@ -268,14 +268,6 @@ export default function AdminPage() {
                 رفع صورة الوجبة
               </button>
 
-              {prodForm.image_url && (
-                <img
-                  src={prodForm.image_url}
-                  alt="preview"
-                  className="w-24 mt-2 rounded"
-                />
-              )}
-
               <div className="modal-buttons mt-3">
                 <button
                   type="button"

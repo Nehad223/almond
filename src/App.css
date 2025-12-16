@@ -151,7 +151,7 @@ button::-moz-focus-inner { border: 0; }
   height: calc(100vh - var(--header-height));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 2vh 1vh 70px 1vh !important;
+  padding: 2vh 1vh 100px 1vh !important;
   box-sizing: border-box;
 }
 
@@ -252,7 +252,7 @@ button::-moz-focus-inner { border: 0; }
 
 /* ================== Responsive ================== */
 @media (max-width: 1000px) {
-  .Card_Slider h1 { font-size: .8rem; }
+  .Card_Slider .info h1 { font-size: 0.8rem !important; }
   .Card_Slider .info { height: 100px; }
 }
 

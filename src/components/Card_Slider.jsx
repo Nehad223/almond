@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-
+import '../admin/admin.css';
 const Card_Slider = ({
   Img,
   Title,
@@ -71,7 +71,7 @@ const Card_Slider = ({
         </div>
 
         <div className="info">
-          <h1>{Title}</h1>
+          <h1 className="ar">{Title}</h1>
           <h1 className="en">{TitleEng}</h1>
           <h1>{PriceNumber} ل.س</h1>
         </div>
@@ -118,9 +118,9 @@ const Card_Slider = ({
       </div>
 
       {showModal && (
-        <div className="price-modal-overlay">
-          <div className="price-modal" role="dialog" aria-modal="true">
-            <h3>تعديل المنتج</h3>
+        <div className="modal-overlay">
+          <div className="modal-box" role="dialog" aria-modal="true">
+            <h3>تعديل الوجبة</h3>
 
             <input
               type="text"
@@ -171,11 +171,11 @@ const Card_Slider = ({
             </button>
 
 
-            <div className="price-modal-actions">
-              <button onClick={() => setShowModal(false)} disabled={saving}>
+            <div className="modal-buttons mt-3">
+              <button onClick={() => setShowModal(false)} className="cancel" disabled={saving}>
                 إلغاء
               </button>
-              <button onClick={handleSave} disabled={saving}>
+              <button onClick={handleSave} disabled={saving}  className="add">
                 {saving ? "جارٍ الحفظ..." : "حفظ"}
               </button>
             </div>
