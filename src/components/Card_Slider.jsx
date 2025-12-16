@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Card_Slider = ({
   Img,
@@ -16,6 +17,7 @@ const Card_Slider = ({
   const [newPrice, setNewPrice] = useState(PriceNumber ?? "");
   const [saving, setSaving] = useState(false);
 
+  /* ================== Edit Price ================== */
   const handleOpenEdit = () => {
     setNewPrice(PriceNumber ?? "");
     setShowModal(true);
@@ -23,10 +25,12 @@ const Card_Slider = ({
 
   const handleSavePrice = async () => {
     const parsed = Number(newPrice);
+
     if (Number.isNaN(parsed) || parsed < 0) {
-      alert("أدخل سعر صالح (رقم).");
+      toast.error("أدخل سعر صالح");
       return;
     }
+
     setSaving(true);
     try {
       await onUpdatePrice(Id, parsed);
@@ -40,39 +44,56 @@ const Card_Slider = ({
 
   return (
     <>
-      <div className="Card_Slider card " >
+      <div className="Card_Slider card">
         <div className={`img-wrapper ${loaded ? "loaded" : "loading"}`}>
-          <img src={Img} loading="lazy" onLoad={() => setLoaded(true)} alt={Title}  />
+          <img
+            src={Img}
+            loading="lazy"
+            onLoad={() => setLoaded(true)}
+            alt={Title}
+          />
         </div>
 
         <div className="info">
-          <h1 >{Title}</h1>
+          <h1>{Title}</h1>
           <h1 className="en">{TitleEng}</h1>
           <h1>{PriceDisplay}</h1>
         </div>
 
-    
         {isAdmin && (
-          <div className="actions" style={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-              zIndex: 10
-
-          }}>
+          <div
+            className="actions"
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              zIndex: 10,
+            }}
+          >
             <button
-              className="btn-edit"
               onClick={handleOpenEdit}
-              style={{ marginRight: 8, padding: "6px 8px", borderRadius: 6, border: "none", cursor: "pointer", background: "#ffd166" }}
+              style={{
+                marginRight: 8,
+                padding: "6px 8px",
+                borderRadius: 6,
+                border: "none",
+                cursor: "pointer",
+                background: "#ffd166",
+              }}
             >
               تعديل السعر
             </button>
+
             <button
-              className="btn-delete"
-              onClick={() => {
-                if (window.confirm("هل أنت متأكد من حذف هذه الوجبة؟")) onDelete(Id);
+              onClick={() => onDelete(Id)}
+              style={{
+                padding: "6px 8px",
+                borderRadius: 6,
+                border: "none",
+                cursor: "pointer",
+                background: "#ef476f",
+                color: "#fff",
               }}
-              style={{ padding: "6px 8px", borderRadius: 6, border: "none", cursor: "pointer", background: "#ef476f", color: "#fff" }}
             >
               حذف
             </button>
@@ -80,42 +101,30 @@ const Card_Slider = ({
         )}
       </div>
 
-     {showModal && (
-  <div className="price-modal-overlay">
-    <div className="price-modal" role="dialog" aria-modal="true">
-      <h3 className="price-modal-title">تعديل السعر</h3>
+      {/* ================== Price Modal ================== */}
+      {showModal && (
+        <div className="price-modal-overlay">
+          <div className="price-modal" role="dialog" aria-modal="true">
+            <h3>تعديل السعر</h3>
 
-      <div className="price-modal-field">
-        <label>السعر (ل.س)</label>
-        <input
-          type="number"
-          value={newPrice}
-          onChange={(e) => setNewPrice(e.target.value)}
-          step="0.01"
-        />
-      </div>
+            <input
+              type="number"
+              value={newPrice}
+              onChange={(e) => setNewPrice(e.target.value)}
+            />
 
-      <div className="price-modal-actions">
-        <button
-          className="btn-cancel"
-          onClick={() => setShowModal(false)}
-        >
-          إلغاء
-        </button>
+            <div className="price-modal-actions">
+              <button onClick={() => setShowModal(false)} disabled={saving}>
+                إلغاء
+              </button>
 
-        <button
-          className="btn-save"
-          onClick={handleSavePrice}
-          disabled={saving}
-        >
-          {saving ? "جاري الحفظ..." : "حفظ التعديل"}
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
+              <button onClick={handleSavePrice} disabled={saving}>
+                {saving ? "جاري الحفظ..." : "حفظ"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

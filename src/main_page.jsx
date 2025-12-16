@@ -3,6 +3,7 @@ import Logo from "./components/Logo";
 import Navbar from "./components/Navbar";
 import Cards from "./components/Cards";
 import Loader from './components/Loader.jsx';
+
 const Main_page = () => {
   const [data, setData] = useState([]);
   const [activeCategory, setActiveCategory] = useState(0);
@@ -21,20 +22,29 @@ const Main_page = () => {
       });
   }, []);
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
 
   return (
-    <div>
-      <Logo />
-      <Navbar
-        categories={data}
-        active={activeCategory}
-        setActive={setActiveCategory}
-      />
-      <Cards meals={data[activeCategory].meals} />
+    <div className="app">
+      {/* Header ثابت فوق الصفحة */}
+      <header className="site-header">
+        <div className="header-inner">
+          <Logo />
+          <Navbar
+            categories={data}
+            active={activeCategory}
+            setActive={setActiveCategory}
+          />
+        </div>
+      </header>
+
+      {/* المنطقة القابلة للتمرير بس للكاردس */}
+      <main className="main-scroll" aria-live="polite">
+        {/* حماية لو كانت الميولس فاضية */}
+        {data[activeCategory] && <Cards meals={data[activeCategory].meals} />}
+      </main>
     </div>
   );
 };
 
 export default Main_page;
-

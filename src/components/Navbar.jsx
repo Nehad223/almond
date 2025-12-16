@@ -7,16 +7,15 @@ export default function Navbar({ categories, active, setActive }) {
       <Swiper slidesPerView="auto" spaceBetween={18} dir="RTL">
         {categories.map((cat, index) => (
           <SwiperSlide key={index} style={{ width: "auto" }}>
-            <button
+            <h1
               className={`gn-nav-link ${active === index ? "active" : ""}`}
               onClick={() => setActive(index)}
             >
               {cat.name}
-            </button>
+            </h1>
           </SwiperSlide>
         ))}
       </Swiper>
     </nav>
   );
 }
-
