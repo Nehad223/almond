@@ -2,7 +2,7 @@
 :root {
   --font-ar: 'Cairo', system-ui, sans-serif;
   --font-en: 'Poppins', system-ui, sans-serif;
-  --header-height: clamp(100px, 20.5vh, 250px) !important; /* ارتفاع الهيدر */
+  --header-height: clamp(100px, 21vh, 250px) !important; /* ارتفاع الهيدر */
 }
 
 /* ================== Global ================== */
