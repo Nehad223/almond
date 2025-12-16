@@ -36,7 +36,7 @@ const Card_Slider = ({
 
   const handleSave = async () => {
     const parsedPrice = Number(form.price);
-    if (!form.name || !form.englishName  || !form.image_url) {
+    if (!form.name || !form.englishName) {
       return toast.error("املأ جميع الحقول");
     }
     if (Number.isNaN(parsedPrice) || parsedPrice < 0) {
@@ -73,7 +73,7 @@ const Card_Slider = ({
         <div className="info">
           <h1>{Title}</h1>
           <h1 className="en">{TitleEng}</h1>
-          <h1>{PriceNumber} د.ل</h1>
+          <h1>{PriceNumber} ل.س</h1>
         </div>
 
         {isAdmin && (

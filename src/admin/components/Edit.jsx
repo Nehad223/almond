@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Main_page from "../../main_page";
 
 const EditPage = () => {
@@ -17,38 +17,34 @@ const EditPage = () => {
     Authorization: `Bearer ${adminToken}`,
   });
 
-  // حذف
+  // حذف (API فقط)
   const deleteMeal = async (mealId) => {
-    try {
-      const res = await fetch(
-        `https://snackalmond1.pythonanywhere.com/editmeal/${mealId}/`,
-        {
-          method: "DELETE",
-          headers: getAuthHeaders(),
-        }
-      );
-      if (!res.ok) throw new Error();
-      toast.success("تم حذف الوجبة");
-    } catch {
-      toast.error("فشل الحذف");
+    const res = await fetch(
+      `https://snackalmond1.pythonanywhere.com/editmeal/${mealId}/`,
+      {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("DELETE_FAILED");
     }
   };
 
-  // تعديل
+  // تعديل (API فقط)
   const updateMeal = async (mealId, updatedData) => {
-    try {
-      const res = await fetch(
-        `https://snackalmond1.pythonanywhere.com/editmeal/${mealId}/`,
-        {
-          method: "PATCH",
-          headers: getAuthHeaders(),
-          body: JSON.stringify(updatedData),
-        }
-      );
-      if (!res.ok) throw new Error();
-      toast.success("تم التحديث");
-    } catch {
-      toast.error("فشل التحديث");
+    const res = await fetch(
+      `https://snackalmond1.pythonanywhere.com/editmeal/${mealId}/`,
+      {
+        method: "PATCH",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(updatedData),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("UPDATE_FAILED");
     }
   };
 
