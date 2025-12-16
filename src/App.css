@@ -87,12 +87,11 @@ body {
 
 .gn-nav-item { position: relative; }
 
-.gn-nav-link,
-.gn-dropdown-toggle {
+.gn-nav-link{
   background: none;
   border: none;
   padding: 6px 4px;
-  font-size: 14px;
+  font-size: clamp(20px, 3vw, 30px) !important;
   letter-spacing: .6px;
   color: #e6e6e6 !important;
   cursor: pointer;
@@ -139,7 +138,6 @@ button::-moz-focus-inner { border: 0; }
 }
 .Card_Slider{
   background-color:#1F1A12 ;
-  border: solid 1px #1F1A12;
   border-radius: 10px;
 }
 
