@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import Logo from "./components/Logo";
 import Navbar from "./components/Navbar";
 import Cards from "./components/Cards";
-import Loader from './components/Loader.jsx';
+import Loader from "./components/Loader.jsx";
 
-const Main_page = () => {
+const Main_page = ({
+  isAdmin = false,
+  onDelete,
+  onUpdate,
+}) => {
   const [data, setData] = useState([]);
   const [activeCategory, setActiveCategory] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -16,17 +20,14 @@ const Main_page = () => {
         setData(json);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
   if (loading) return <Loader />;
 
   return (
     <div className="app">
-      {/* Header ثابت فوق الصفحة */}
+      {/* Header ثابت */}
       <header className="site-header">
         <div className="header-inner">
           <Logo />
@@ -38,14 +39,20 @@ const Main_page = () => {
         </div>
       </header>
 
-      {/* المنطقة القابلة للتمرير بس للكاردس */}
-      <main className="main-scroll" aria-live="polite">
-        {/* حماية لو كانت الميولس فاضية */}
-        {data[activeCategory] && <Cards meals={data[activeCategory].meals} />}
+      {/* سكرول فقط للكاردس */}
+      <main className="main-scroll">
+        {data[activeCategory] && (
+          <Cards
+            meals={data[activeCategory].meals}
+            isAdmin={isAdmin}
+            onDelete={onDelete}
+            onUpdateProduct={onUpdate}
+            Categories={data}
+          />
+        )}
       </main>
     </div>
   );
 };
 
 export default Main_page;
-

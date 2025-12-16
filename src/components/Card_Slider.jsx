@@ -4,39 +4,55 @@ import { toast } from "react-toastify";
 const Card_Slider = ({
   Img,
   Title,
-  PriceDisplay,
-  PriceNumber,
   TitleEng,
+  PriceNumber,
+  CategoryId,
   Id,
   isAdmin,
   onDelete,
-  onUpdatePrice,
+  onUpdateProduct, // دالة تحديث كل الخصائص
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [newPrice, setNewPrice] = useState(PriceNumber ?? "");
+  const [form, setForm] = useState({
+    name: Title,
+    englishName: TitleEng,
+    price: PriceNumber,
+    category: CategoryId,
+    image_url: Img,
+  });
   const [saving, setSaving] = useState(false);
 
-  /* ================== Edit Price ================== */
   const handleOpenEdit = () => {
-    setNewPrice(PriceNumber ?? "");
+    setForm({
+      name: Title,
+      englishName: TitleEng,
+      price: PriceNumber,
+      category: CategoryId,
+      image_url: Img,
+    });
     setShowModal(true);
   };
 
-  const handleSavePrice = async () => {
-    const parsed = Number(newPrice);
-
-    if (Number.isNaN(parsed) || parsed < 0) {
-      toast.error("أدخل سعر صالح");
-      return;
+  const handleSave = async () => {
+    const parsedPrice = Number(form.price);
+    if (!form.name || !form.englishName  || !form.image_url) {
+      return toast.error("املأ جميع الحقول");
+    }
+    if (Number.isNaN(parsedPrice) || parsedPrice < 0) {
+      return toast.error("أدخل سعر صالح");
     }
 
     setSaving(true);
     try {
-      await onUpdatePrice(Id, parsed);
+      await onUpdateProduct(Id, {
+        ...form,
+        price: parsedPrice,
+      });
       setShowModal(false);
     } catch (err) {
       console.error(err);
+      toast.error("فشل تحديث المنتج");
     } finally {
       setSaving(false);
     }
@@ -47,7 +63,7 @@ const Card_Slider = ({
       <div className="Card_Slider card">
         <div className={`img-wrapper ${loaded ? "loaded" : "loading"}`}>
           <img
-            src={Img}
+            src={Img || "/exampel.jpg"}
             loading="lazy"
             onLoad={() => setLoaded(true)}
             alt={Title}
@@ -57,7 +73,7 @@ const Card_Slider = ({
         <div className="info">
           <h1>{Title}</h1>
           <h1 className="en">{TitleEng}</h1>
-          <h1>{PriceDisplay}</h1>
+          <h1>{PriceNumber} د.ل</h1>
         </div>
 
         {isAdmin && (
@@ -81,7 +97,7 @@ const Card_Slider = ({
                 background: "#ffd166",
               }}
             >
-              تعديل السعر
+              تعديل
             </button>
 
             <button
@@ -101,25 +117,66 @@ const Card_Slider = ({
         )}
       </div>
 
-      {/* ================== Price Modal ================== */}
       {showModal && (
         <div className="price-modal-overlay">
           <div className="price-modal" role="dialog" aria-modal="true">
-            <h3>تعديل السعر</h3>
+            <h3>تعديل المنتج</h3>
 
             <input
-              type="number"
-              value={newPrice}
-              onChange={(e) => setNewPrice(e.target.value)}
+              type="text"
+              placeholder="اسم الوجبة"
+              value={form.name}
+              onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
             />
+            <input
+              type="text"
+              placeholder="English Name"
+              value={form.englishName}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, englishName: e.target.value }))
+              }
+            />
+            <input
+              type="number"
+              placeholder="السعر"
+              value={form.price}
+              onChange={(e) => setForm((p) => ({ ...p, price: e.target.value }))}
+            />
+
+
+            <button
+              type="button"
+              className="upload-btn"
+              onClick={() =>
+                window.cloudinary &&
+                window.cloudinary
+                  .createUploadWidget(
+                    {
+                      cloudName: "dph8y1htk",
+                      uploadPreset: "unsigned_products",
+                      multiple: false,
+                      folder: "products",
+                    },
+                    (err, res) => {
+                      if (res.event === "success") {
+                        setForm((p) => ({ ...p, image_url: res.info.secure_url }));
+                        toast.success("تم رفع الصورة بنجاح");
+                      }
+                    }
+                  )
+                  .open()
+              }
+            >
+              رفع صورة جديدة
+            </button>
+
 
             <div className="price-modal-actions">
               <button onClick={() => setShowModal(false)} disabled={saving}>
                 إلغاء
               </button>
-
-              <button onClick={handleSavePrice} disabled={saving}>
-                {saving ? "جاري الحفظ..." : "حفظ"}
+              <button onClick={handleSave} disabled={saving}>
+                {saving ? "جارٍ الحفظ..." : "حفظ"}
               </button>
             </div>
           </div>
@@ -130,4 +187,3 @@ const Card_Slider = ({
 };
 
 export default Card_Slider;
-

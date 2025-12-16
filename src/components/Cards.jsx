@@ -1,7 +1,7 @@
 import React from "react";
 import Card_Slider from "./Card_Slider";
 
-const Cards = ({ meals = [], isAdmin, onDelete, onUpdatePrice }) => {
+const Cards = ({ meals = [], isAdmin, onDelete, onUpdateProduct }) => {
   return (
     <div className="Cards">
       {meals.map((meal, index) => (
@@ -15,7 +15,8 @@ const Cards = ({ meals = [], isAdmin, onDelete, onUpdatePrice }) => {
             PriceNumber={meal.price}
             isAdmin={isAdmin}
             onDelete={onDelete}
-            onUpdatePrice={onUpdatePrice}
+            onUpdateProduct={onUpdateProduct}  
+            
           />
         </div>
       ))}

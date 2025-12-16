@@ -294,8 +294,15 @@ export default function AdminPage() {
         </div>
 
       )}
+          <button
+        className="admin-btn bg-yellow-500"
+         onClick={() => (window.location.href = "admin/edit")}
+      >
+        تعديل الوجبة
+      </button>
     </div>
-    <EditPage/>
+
         </>
   );
 }
+
