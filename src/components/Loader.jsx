@@ -1,10 +1,15 @@
-import React from 'react'
+import React from "react";
 
 const Loader = () => {
   return (
-    <div>
-      load...
+    <div className="loader-container">
+      <img
+        src="/logo.png"  
+        alt="Loading"
+        className="loader-logo"
+      />
     </div>
-  )
-}
+  );
+};
+
 export default Loader;
