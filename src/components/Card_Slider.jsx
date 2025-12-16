@@ -40,7 +40,7 @@ const Card_Slider = ({
 
   return (
     <>
-      <div className="Card_Slider " >
+      <div className="Card_Slider card " >
         <div className={`img-wrapper ${loaded ? "loaded" : "loading"}`}>
           <img src={Img} loading="lazy" onLoad={() => setLoaded(true)} alt={Title}  />
         </div>
