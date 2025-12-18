@@ -264,3 +264,14 @@ button::-moz-focus-inner { border: 0; }
 @media (max-width: 500px) {
   .Card_Slider .info { height: 90px; }
 }
+
+.Cards > div {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .30s ease, transform .30s ease;
+}
+
+.Cards > div.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}

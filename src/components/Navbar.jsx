@@ -19,3 +19,4 @@ export default function Navbar({ categories, active, setActive }) {
     </nav>
   );
 }
+

@@ -187,3 +187,4 @@ const Card_Slider = ({
 };
 
 export default Card_Slider;
+

@@ -24,6 +24,38 @@ const Main_page = ({
       .catch(() => setLoading(false));
   }, []);
 
+useEffect(() => {
+  const container = document.querySelector(".Cards");
+  if (!container) return;
+
+  const cards = container.querySelectorAll(":scope > div");
+  if (!cards.length) return;
+
+  let i = 0; // للـ stagger
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.transitionDelay = `${i * 60}ms`;
+          entry.target.classList.add("in-view");
+          i++;
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      root: document.querySelector(".main-scroll") || null,
+      threshold: 0.15,
+    }
+  );
+
+  cards.forEach(card => observer.observe(card));
+
+  return () => observer.disconnect();
+}, [data, activeCategory]); // observer يتحدث كل مرة تتغير البيانات أو الصفحة
+
+
   /* ================= حذف فوري ================= */
   const handleDelete = async (mealId) => {
     if (!window.confirm("متأكد من الحذف؟")) return;
@@ -101,3 +133,4 @@ const Main_page = ({
 };
 
 export default Main_page;
+
