@@ -11,7 +11,7 @@ const Main_page = ({
   onUpdate,
 }) => {
   const [data, setData] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(0);
+const [activeCategory, setActiveCategory] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,6 +19,7 @@ const Main_page = ({
       .then((res) => res.json())
       .then((json) => {
         setData(json);
+        setActiveCategory(0);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -124,7 +125,7 @@ useEffect(() => {
 
       {/* سكرول فقط للكاردس */}
       <main className="main-scroll">
-        {data[activeCategory] && (
+        {activeCategory !== null && data[activeCategory] && (
           <Cards
             meals={data[activeCategory].meals}
             isAdmin={isAdmin}
