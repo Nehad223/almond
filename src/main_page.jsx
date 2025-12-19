@@ -28,32 +28,38 @@ useEffect(() => {
   const container = document.querySelector(".Cards");
   if (!container) return;
 
-  const cards = container.querySelectorAll(":scope > div");
+  const cards = container.children;
   if (!cards.length) return;
 
-  let i = 0; // للـ stagger
-
   const observer = new IntersectionObserver(
-    (entries, obs) => {
+    entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.transitionDelay = `${i * 60}ms`;
           entry.target.classList.add("in-view");
-          i++;
-          obs.unobserve(entry.target);
+          observer.unobserve(entry.target);
         }
       });
     },
     {
-      root: document.querySelector(".main-scroll") || null,
-      threshold: 0.15,
+      root: document.querySelector(".main-scroll"),
+      threshold: 0.2,
     }
   );
 
-  cards.forEach(card => observer.observe(card));
+  Array.from(cards).forEach(card => observer.observe(card));
 
   return () => observer.disconnect();
-}, [data, activeCategory]); // observer يتحدث كل مرة تتغير البيانات أو الصفحة
+}, [activeCategory]);
+
+useEffect(() => {
+  const scrollContainer = document.querySelector(".main-scroll");
+  if (scrollContainer) {
+    scrollContainer.scrollTo({
+      top: 0,
+      behavior: "instant", // أو "smooth" إذا بدك
+    });
+  }
+}, [activeCategory]);
 
 
   /* ================= حذف فوري ================= */

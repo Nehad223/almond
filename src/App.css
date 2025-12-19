@@ -267,8 +267,8 @@ button::-moz-focus-inner { border: 0; }
 
 .Cards > div {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity .1s ease, transform .1s ease;
+  transform: translateY(12px);
+  transition: opacity .35s ease, transform .35s ease;
 }
 
 .Cards > div.in-view {
