@@ -4,6 +4,7 @@ import Logo from "./components/Logo";
 import Navbar from "./components/Navbar";
 import Cards from "./components/Cards";
 import Loader from "./components/Loader.jsx";
+import Footer2 from './Footers/Footer2/Fotter2.jsx';
 
 const Main_page = ({
   isAdmin = false,
@@ -125,7 +126,8 @@ useEffect(() => {
 
       {/* سكرول فقط للكاردس */}
       <main className="main-scroll">
-        {activeCategory !== null && data[activeCategory] && (
+        <div className="content-wrap">
+          {activeCategory !== null && data[activeCategory] && (
           <Cards
             meals={data[activeCategory].meals}
             isAdmin={isAdmin}
@@ -134,7 +136,12 @@ useEffect(() => {
             Categories={data}
           />
         )}
+        </div>
+        
+            <Footer2/>
+
       </main>
+
     </div>
   );
 };

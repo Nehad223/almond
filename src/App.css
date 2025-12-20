@@ -151,10 +151,13 @@ button::-moz-focus-inner { border: 0; }
   height: calc(100vh - var(--header-height));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 2vh 1vh 100px 1vh !important;
   box-sizing: border-box;
 }
 
+.content-wrap{
+  padding: 2vh 1vh 10px 1vh !important;
+
+}
 /* ================== Cards ================== */
 .Cards {
   margin: 0 auto;
