@@ -7,6 +7,7 @@
 
 /* ================== Global ================== */
 body {
+  min-height: 100vh;
   margin: 0;
   font-family: var(--font-ar);
   font-weight: 700 !important;
@@ -18,7 +19,7 @@ body {
 
 .en { font-family: var(--font-en); }
 
-.app { position: relative; }
+.app { min-height: 100vh; position: relative; }
 
 /* ================== Loader ================== */
 .loader-container {
