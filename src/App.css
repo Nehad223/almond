@@ -149,7 +149,7 @@ button::-moz-focus-inner { border: 0; }
 
 /* ================== Scrollable Cards ================== */
 .main-scroll {
-  padding-bottom: 50px;
+  padding-bottom: 60px;
   margin-top: var(--header-height);
   height: calc(100vh - var(--header-height));
   overflow-y: auto;
