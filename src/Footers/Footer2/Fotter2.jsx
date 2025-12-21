@@ -12,3 +12,4 @@ const Fotter2 = () => {
 };
 
 export default Fotter2;
+

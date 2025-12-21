@@ -25,3 +25,4 @@ onClick={() =>
 };
 
 export default Rights_Fotter2;
+
