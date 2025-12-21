@@ -3,7 +3,7 @@
   width: 100%;
   background: linear-gradient(to top, #1c1c1c, #222);
   padding: 16px 0 12px;
-padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
 
 }
 
