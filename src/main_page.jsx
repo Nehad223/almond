@@ -137,8 +137,6 @@ useEffect(() => {
           />
         )}
         </div>
-        
-            <Footer2/>
 
       </main>
 
@@ -147,5 +145,4 @@ useEffect(() => {
 };
 
 export default Main_page;
-
 

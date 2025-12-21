@@ -7,18 +7,21 @@
 
 /* ================== Global ================== */
 body {
+  min-height: 100vh;
   margin: 0;
   font-family: var(--font-ar);
-  background: linear-gradient(180deg, #F39C12 0%, #D35400 100%);
-  overflow: hidden;
-}
-
-.app {
-  height: 100dvh;
-  position: relative;
+  font-weight: 700 !important;
+  background: linear-gradient(180deg, #F39C12 0%, #D35400 100%) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-y: hidden;
 }
 
 .en { font-family: var(--font-en); }
+
+.app { min-height: 100vh; position: relative;
+
+}
 
 /* ================== Loader ================== */
 .loader-container {
@@ -146,13 +149,13 @@ button::-moz-focus-inner { border: 0; }
 
 /* ================== Scrollable Cards ================== */
 .main-scroll {
+  padding-bottom: 50px;
   margin-top: var(--header-height);
-  height: calc(100dvh - var(--header-height));
+  height: calc(100vh - var(--header-height));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
 }
-
 
 .content-wrap{
   padding: 2vh 1vh 10px 1vh !important;
@@ -278,5 +281,3 @@ button::-moz-focus-inner { border: 0; }
   opacity: 1;
   transform: translateY(0);
 }
-
-

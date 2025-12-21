@@ -1,10 +1,9 @@
 /* ================== Footer Wrapper ================== */
 .Fotter2 {
   width: 100%;
+  margin-bottom: 0px;
   background: linear-gradient(to top, #1c1c1c, #222);
   padding: 16px 0 12px;
-padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
-
 }
 
 /* ================== Line ================== */
