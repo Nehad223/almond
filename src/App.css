@@ -32,6 +32,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   z-index: 9999;
 }
 
@@ -287,3 +288,12 @@ button::-moz-focus-inner { border: 0; }
   transform: translateY(0);
 }
 
+
+.loader-credit {
+  margin-top: 14px;
+  font-size: 12px;
+  opacity: 0.45;
+  color: #fff;
+  font-family: var(--font-ar);
+  letter-spacing: 0.3px;
+}

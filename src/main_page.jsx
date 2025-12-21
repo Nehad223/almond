@@ -112,7 +112,6 @@ useEffect(() => {
 
   return (
     <div className="app">
-      {/* Header ثابت */}
       <header className="site-header">
         <div className="header-inner">
           <Logo />
@@ -124,7 +123,6 @@ useEffect(() => {
         </div>
       </header>
 
-      {/* سكرول فقط للكاردس */}
       <main className="main-scroll">
         <div className="content-wrap">
           {activeCategory !== null && data[activeCategory] && (
@@ -137,9 +135,6 @@ useEffect(() => {
           />
         )}
         </div>
-        
-            <Footer2/>
-
       </main>
 
     </div>
