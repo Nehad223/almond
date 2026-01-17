@@ -319,7 +319,6 @@ font-size: 0.8rem;
   align-items: center;
   justify-content: center;
   min-height: 30px;
-  color: #f3d98b;
     text-decoration: none !important;
 
 }
@@ -338,13 +337,13 @@ font-size: 0.8rem;
 
 }
 .store span{
-
+text-shadow: #14110f;
   padding: 5px 10px;
  width: auto;
  height: 25px;
  text-align: center !important;
 border: none;
- color: #fffefe;
+ color: #E6CEB4;
 }
 
 @media (max-width: 600px) {
