@@ -4,7 +4,7 @@ import Logo from "./components/Logo";
 import Navbar from "./components/Navbar";
 import Cards from "./components/Cards";
 import Loader from "./components/Loader.jsx";
-import Footer2 from './Footers/Footer2/Fotter2.jsx';
+import Delivery_To_Home from "./components/Delivery_To_Home.jsx";
 
 const Main_page = ({
   isAdmin = false,
@@ -58,33 +58,67 @@ useEffect(() => {
   if (scrollContainer) {
     scrollContainer.scrollTo({
       top: 0,
-      behavior: "instant", // أو "smooth" إذا بدك
+      behavior: "instant", 
     });
   }
 }, [activeCategory]);
 
 
-  /* ================= حذف فوري ================= */
-  const handleDelete = async (mealId) => {
-    if (!window.confirm("متأكد من الحذف؟")) return;
 
-    try {
-      await onDelete(mealId);
+const handleDelete = async (mealId) => {
+  const confirm = await new Promise((resolve) => {
+    toast(
+      ({ closeToast }) => (
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          <span>هل أنت متأكد من حذف الوجبة؟</span>
+          <div style={{ display: "flex", justifyContent: "space-around", marginTop: "6px" }}>
+            <button
+              onClick={() => { resolve(true); closeToast(); }}
+              style={{
+                padding: "5px 12px",
+                backgroundColor: "#E74C3C",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              نعم
+            </button>
+            <button
+              onClick={() => { resolve(false); closeToast(); }}
+              style={{
+                padding: "5px 12px",
+                backgroundColor: "#95A5A6",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              لا
+            </button>
+          </div>
+        </div>
+      ),
+      { autoClose: false, closeOnClick: false, draggable: false }
+    );
+  });
+  if (!confirm) return; 
+  try {
+    await onDelete(mealId);
+    setData((prev) =>
+      prev.map((cat) => ({
+        ...cat,
+        meals: cat.meals.filter((meal) => meal.id !== mealId),
+      }))
+    );
 
-      setData((prev) =>
-        prev.map((cat) => ({
-          ...cat,
-          meals: cat.meals.filter(
-            (meal) => meal.id !== mealId
-          ),
-        }))
-      );
+  } catch {}
+};
 
-      toast.success("تم حذف الوجبة");
-    } catch {
-      toast.error("فشل الحذف");
-    }
-  };
 
   /* ================= تعديل فوري ================= */
   const handleUpdate = async (mealId, updatedData) => {
@@ -102,9 +136,7 @@ useEffect(() => {
         }))
       );
 
-      toast.success("تم تحديث الوجبة");
     } catch {
-      toast.error("فشل التحديث");
     }
   };
 
@@ -115,6 +147,9 @@ useEffect(() => {
       <header className="site-header">
         <div className="header-inner">
           <Logo />
+          {!isAdmin &&  <Delivery_To_Home/>}
+         
+          
           <Navbar
             categories={data}
             active={activeCategory}

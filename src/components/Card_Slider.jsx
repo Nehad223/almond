@@ -10,7 +10,8 @@ const Card_Slider = ({
   Id,
   isAdmin,
   onDelete,
-  onUpdateProduct, // دالة تحديث كل الخصائص
+  onUpdateProduct, 
+
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -76,6 +77,7 @@ const Card_Slider = ({
           <h1>{PriceNumber} ل.س</h1>
         </div>
 
+
         {isAdmin && (
           <div
             className="actions"
@@ -95,12 +97,16 @@ const Card_Slider = ({
                 border: "none",
                 cursor: "pointer",
                 background: "#ffd166",
+                marginLeft:10,
+
               }}
+
             >
               تعديل
             </button>
 
             <button
+
               onClick={() => onDelete(Id)}
               style={{
                 padding: "6px 8px",
@@ -109,6 +115,7 @@ const Card_Slider = ({
                 cursor: "pointer",
                 background: "#ef476f",
                 color: "#fff",
+              
               }}
             >
               حذف
@@ -187,4 +194,7 @@ const Card_Slider = ({
 };
 
 export default Card_Slider;
+
+
+
 

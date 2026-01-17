@@ -4,13 +4,13 @@ const Loader = () => {
   return (
     <div className="loader-container">
       <img
-        src="/logo.png"
+        src="/logo.webp"
         alt="Loading"
         className="loader-logo"
       />
 
       <div className="loader-credit">
-Developed by NovaTech
+Developed by MJ+
       </div>
     </div>
   );

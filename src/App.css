@@ -1,13 +1,17 @@
-/* ================== Fonts ================== */
+
 :root {
   --font-ar: 'Cairo', system-ui, sans-serif;
   --font-en: 'Poppins', system-ui, sans-serif;
-  --header-height: clamp(100px, 26vh, 350px) !important; /* ارتفاع الهيدر */
+  --header-height: clamp(100px, 26vh, 350px) !important; 
+}
+.app {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ================== Global ================== */
 body {
-  min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
   font-family: var(--font-ar);
   font-weight: 700 !important;
@@ -24,8 +28,6 @@ body {
   flex-direction: column;
 }
 
-
-/* ================== Loader ================== */
 .loader-container {
   position: fixed;
   inset: 0;
@@ -48,7 +50,7 @@ body {
   100% { transform: scale(0.95); opacity: 0.7; }
 }
 
-/* ================== Header & Logo ================== */
+
 .site-header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -153,7 +155,7 @@ button::-moz-focus-inner { border: 0; }
 /* ================== Scrollable Cards ================== */
 .main-scroll {
   margin-top: var(--header-height);
-  min-height: calc(100vh - var(--header-height));
+  min-height: calc(100svh - var(--header-height));
   display: flex;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -164,7 +166,7 @@ button::-moz-focus-inner { border: 0; }
 }
 
 .content-wrap {
-  padding: 2vh 1vh 30px 1vh !important;
+  padding: 2vh 1vh 0px 1vh !important;
   flex: 1;
 }
 
@@ -297,4 +299,115 @@ button::-moz-focus-inner { border: 0; }
   color: #fff;
   font-family: var(--font-ar);
   letter-spacing: 0.3px;
+}
+
+.store{
+   position: fixed;
+  top: 7vh;right: 2vh;
+  border: none ;
+background: linear-gradient(135deg, #FFB703, #F77F00);
+  box-shadow: 0 8px 25px rgba(0,0,0,.35);
+  width: auto;
+  text-align: left;
+  padding: 5px 10px;
+font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: flex;
+  border-radius: 100px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  color: #f3d98b;
+    text-decoration: none !important;
+
+}
+
+.store:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+.store-inner{
+  position: relative;
+
+}
+.store img{
+  width: 30px;
+  height: 30px;
+
+}
+.store span{
+
+  padding: 5px 10px;
+ width: auto;
+ height: 25px;
+ text-align: center !important;
+border: none;
+ color: #E6CEB4;
+}
+
+@media (max-width: 600px) {
+.store span{
+  padding: 3px 5px;
+}
+  .store{
+    max-width: 120px !important;
+    top: 10px;
+    right: 10px;
+font-size: 0.6rem;
+  padding: 3px 5px;
+
+
+  }
+.store img{
+  width: 25px;
+  height: 25px;
+
+}
+}
+
+
+
+/* ================== TABLETS & IPAD ================== */
+@media (min-width: 700px) and (max-width: 1100px) {
+
+  :root {
+    --header-height: clamp(120px, 22vh, 220px);
+  }
+
+  .logo img {
+    width: 26vh;
+    height: auto;
+  }
+
+  /* Cards grid */
+  .Cards {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px;
+    padding: 0 14px;
+  }
+
+  .img-wrapper {
+    height: 16vh;
+  }
+
+  .Card_Slider .info {
+    font-size: 0.9rem;
+    padding: 8px;
+    height: auto;
+  }
+
+  /* Navbar text */
+  .gn-nav-link {
+    font-size: clamp(18px, 2.2vw, 24px) !important;
+  }
+
+  /* Store button */
+  .store {
+    top: 16px;
+    right: 16px;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
 }
