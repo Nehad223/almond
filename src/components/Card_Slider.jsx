@@ -10,8 +10,8 @@ const Card_Slider = ({
   Id,
   isAdmin,
   onDelete,
-  onUpdateProduct, 
-
+  onUpdateProduct,
+  onAddToCart,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -61,22 +61,34 @@ const Card_Slider = ({
 
   return (
     <>
-      <div className="Card_Slider card">
-        <div className={`img-wrapper ${loaded ? "loaded" : "loading"}`}>
+      <div className={`Card_Slider card ${!loaded ? "card-skeleton" : ""}`}>
+        {!loaded ? (
+          <>
+            <div className="card-skeleton-img" />
+            <div className="card-skeleton-info">
+              <div className="card-skeleton-line long" />
+              <div className="card-skeleton-line" />
+              <div className="card-skeleton-line short" />
+              <div className="card-skeleton-btn" />
+            </div>
+          </>
+        ) : null}
+
+        <div className={`img-wrapper ${loaded ? "loaded" : "loading"} ${!loaded ? "card-skeleton-loading-hidden" : ""}`}>
           <img
             src={Img || "/exampel.jpg"}
             loading="lazy"
             onLoad={() => setLoaded(true)}
+            onError={() => setLoaded(true)}
             alt={Title}
           />
         </div>
 
-        <div className="info">
+        <div className={`info ${!loaded ? "card-skeleton-loading-hidden" : ""}`}>
           <h1 className="ar">{Title}</h1>
           <h1 className="en">{TitleEng}</h1>
           <h1>{PriceNumber} ل.س</h1>
         </div>
-
 
         {isAdmin && (
           <div
@@ -97,16 +109,13 @@ const Card_Slider = ({
                 border: "none",
                 cursor: "pointer",
                 background: "#ffd166",
-                marginLeft:10,
-
+                marginLeft: 10,
               }}
-
             >
               تعديل
             </button>
 
             <button
-
               onClick={() => onDelete(Id)}
               style={{
                 padding: "6px 8px",
@@ -115,7 +124,6 @@ const Card_Slider = ({
                 cursor: "pointer",
                 background: "#ef476f",
                 color: "#fff",
-              
               }}
             >
               حذف
