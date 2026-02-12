@@ -107,7 +107,7 @@ const Main_page = ({
           name: meal.name || meal.title || "بدون اسم",
           price: Number(meal.price || meal.price_value || 0),
           qty: 1,
-          img: meal.image || meal.img || "/exampel.jpg",
+          img: meal.image || meal.img || "/exampel.avif",
         },
       ];
     });

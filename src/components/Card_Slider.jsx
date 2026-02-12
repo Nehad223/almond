@@ -76,7 +76,7 @@ const Card_Slider = ({
 
         <div className={`img-wrapper ${loaded ? "loaded" : "loading"} ${!loaded ? "card-skeleton-loading-hidden" : ""}`}>
           <img
-            src={Img || "/exampel.jpg"}
+            src={Img || "/exampel.avif"}
             loading="lazy"
             onLoad={() => setLoaded(true)}
             onError={() => setLoaded(true)}
